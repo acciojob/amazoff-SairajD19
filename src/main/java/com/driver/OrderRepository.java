@@ -7,33 +7,24 @@ import java.util.*;
 @Repository
 public class OrderRepository {
 
-    private HashMap<String, Order> orderDb;
-    private HashMap<String, DeliveryPartner> partnerDb;
-    private HashMap<String, List<String>> pairDb;
-    private HashMap<String, String> assignedDb;
+    HashMap<String, Order> orderDb = new HashMap<>();
+    HashMap<String, DeliveryPartner> partnerDb = new HashMap<>();
+    HashMap<String, List<String>> pairDb = new HashMap<>();
+    HashMap<String, String> assignedDb = new HashMap<>(); // <orderId, partnerId>
 
-    public OrderRepository() {
-        this.orderDb = new HashMap<>();
-        this.partnerDb = new HashMap<>();
-        this.pairDb = new HashMap<>();
-        this.assignedDb = new HashMap<>();
-    }
-
-    //add a order
-    public String addOrder(Order order){
+    public String addOrder(Order order) {
         orderDb.put(order.getId(), order);
         return "Added";
     }
 
-    //add partner
-    public String addPartner(String partnerId){
+    public String addPartner(String partnerId) {
         DeliveryPartner partner = new DeliveryPartner(partnerId);
         partnerDb.put(partnerId, partner);
         return "Added";
     }
 
-    //add order to partner
-    public String addOrderPartner(String orderId, String partnerId){
+    public String addOrderPartnerPair(String orderId, String partnerId) {
+        // This is basically assigning that order to that partnerId
         List<String> list = pairDb.getOrDefault(partnerId, new ArrayList<>());
         list.add(orderId);
         pairDb.put(partnerId, list);
@@ -41,21 +32,27 @@ public class OrderRepository {
         DeliveryPartner partner = partnerDb.get(partnerId);
         partner.setNumberOfOrders(list.size());
         return "Added";
+
     }
 
-    //get order
-    public Order getOrderById(String orderId){
-        if(orderDb.containsKey(orderId)){
-            return orderDb.get(orderId);
+    public Order getOrderById(String orderId) {
+        // order should be returned with an orderId.
+        for (String s : orderDb.keySet()) {
+            if (s.equals(orderId)) {
+                return orderDb.get(s);
+            }
         }
         return null;
     }
 
-    //get partner
-    public DeliveryPartner getPartnerById(String partnerId){
-        if(partnerDb.containsKey(partnerId))
+    public DeliveryPartner getPartnerById(String partnerId) {
+        // deliveryPartner should contain the value given by partnerId
+
+        if (partnerDb.containsKey(partnerId)) {
             return partnerDb.get(partnerId);
+        }
         return null;
+
     }
 
     public int getOrderCountByPartnerId(String partnerId) {

@@ -23,7 +23,7 @@ public class OrderService {
     public String addOrderPartnerPair(String orderId, String partnerId) {
 
         // This is basically assigning that order to that partnerId
-        String result = orderRepository.addOrderPartner(orderId, partnerId);
+        String result = orderRepository.addOrderPartnerPair(orderId, partnerId);
         return result;
     }
 
